@@ -65,16 +65,40 @@ void update(vector<int> &rnn, int ind, set<pdi> &seeds){
 
 
 
-int main(){
-	n = 1000000;
-	eps = 0.3;
-	min_points = 4;
-	points.resize(n);
-	act_dim = 2;
+int main(int argc, char **argv){
+	ios_base::sync_with_stdio(false); 
+    cin.tie(NULL);   
+	min_points = stoi(argv[1]);
+	eps = stof(argv[2]);
+  	string file_name = argv[3];
+  	ifstream f(file_name);
+	int act_dim;
+  	int n = 0;
+  	string line;
+  	while(getline(f, line)) {
+    	stringstream stream(line);
+    	vector<double> pt;
+    	while(1) {
+      		double pt1;
+      		stream >> pt1;
+      		pt.push_back(pt1);
+      		if(!stream)
+        		break;
+    	}
+    	act_dim = pt.size();
+    	Point p;
+    	for(int i=0;i<5;i++){
+    		p[i] = 0.0;
+    	}
+    	for(int i=0;i<act_dim;i++){
+    		p[i] = pt[i];
+    	}
+    	points.push_back(p);
+	    n+=1;
+  	}
 	processed.resize(n);
 	reachability.resize(n);
 	for(int i=0;i<n;i++){
-		points[i] = Point(i+0.1,i+0.2,0.0,0.0,0.0);
 		processed[i] = 0;
 		reachability[i] = DBL_MAX;
 	}
@@ -101,7 +125,17 @@ int main(){
 			}
 		}
 	}
-
+	double maxx = DBL_MIN;
+	for(int i=0;i<n;i++){
+		if(reachability[i]!=DBL_MAX)
+			maxx = max(maxx,reachability[i]);
+	}
+	for(int i=0;i<n;i++){
+		if(reachability[order[i]]==DBL_MAX)
+			cout << 1.5 * maxx <<"\n";
+		else
+			cout << reachability[order[i]] <<"\n";
+	}
 	return 0;
 }
 
