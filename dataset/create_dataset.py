@@ -59,13 +59,22 @@ def createNoise(numPoints, noise, width, height, xs, ys, marked_points):
 
 	return marked_points
 
-gwidth = 10000
-gheight = 10000
-gap = 775
+gwidth = 10900
+gheight = 11000
+gap = 1000
 thicks = 300
 thickl = 3000
-numPoints = 400
+numPoints = 500000
 noise = 1000
+
+mult = 2000
+
+gwidth = mult*gwidth
+gheight = mult*gheight
+gap = mult*gap
+thicks = mult*thicks
+thickl = mult*thickl
+noise = mult*noise
 
 marked_points = []
 
@@ -85,9 +94,15 @@ marked_points = createNoise(numPoints//20, noise, gwidth + 2*noise, gheight + 2*
 
 print("Noise added")
 
+file = open("dataset1000000.txt", "w")
+
 for ele in marked_points:
 	i = ele[0]
 	j = ele[1]
+
+	file.write(str(i) + " " + str(j) + "\n")
+	continue
+
 	fd = ele[2]
 	if(fd==1):
 		plt.plot(i, j, 'ro', color='red')
@@ -96,4 +111,4 @@ for ele in marked_points:
 	elif(fd==3):
 		plt.plot(i, j, 'ro', color='red')
 
-plt.show()
+# plt.show()
