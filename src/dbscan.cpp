@@ -39,8 +39,7 @@ int main(){
 	for(int i=0;i<n;i++){
 		if(label[i]!=-1)
 			continue;
-		const Point query(points[i][0],points[i][1],points[i][2],points[i][3],points[i][4]);
-		const vector<int> radIndices = kdtree.radiusSearch(query, eps, act_dim);
+		const vector<int> radIndices = kdtree.radiusSearch(points[i], eps, act_dim);
 		if(radIndices.size()<min_points){
 			label[i] = 0;
 			continue;
@@ -57,8 +56,7 @@ int main(){
 			if(label[q]!=-1)
 				continue;
 			label[q] = cluster_count;
-			const Point query2(points[i]);
-			const vector<int> radIndices2 = kdtree.radiusSearch(query2, eps, act_dim);
+			const vector<int> radIndices2 = kdtree.radiusSearch(points[q], eps, act_dim);
 			if(radIndices2.size() >= min_points){
 				seed.insert(radIndices2.begin(),radIndices2.end());
 			}
