@@ -1,7 +1,13 @@
 import sys
 import matplotlib.pyplot as plt
 
-fname = sys.argv[1]
+inpfile = sys.argv[1]
+fname = sys.argv[2]
+
+with open(inpfile) as f:
+	inpdata = f.readlines()
+inpdata = [[int(f) for f in x.strip().split(" ")] for x in inpdata]
+
 
 with open(fname) as f:
     content = f.readlines()
@@ -16,6 +22,6 @@ for ele in content:
 		color_ind += 1
 	else:
 		coord = [int(f) for f in ele.split(" ")]
-		plt.plot(coord[0], coord[1], 'ro', color="rbgkm"[color_ind])
+		plt.plot(inpdata[coord[0]][0], inpdata[coord[0]][1], 'ro', color="rbgkm"[color_ind])
 
 plt.show()
