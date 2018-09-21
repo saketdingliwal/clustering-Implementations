@@ -115,6 +115,7 @@ int main(int argc, char **argv){
 			update(radIndices, i, seeds);
 			while(seeds.size()!=0){
 				auto itr = seeds.begin();
+				seeds.erase(itr);
 				int q = itr->second;
 				processed[q] = 1;
 				order.push_back(q);
