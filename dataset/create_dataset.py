@@ -83,7 +83,7 @@ thickl = 3000
 numPoints = 500000
 noise = 1000
 
-mult = 2000
+mult = 10
 
 gwidth = mult*gwidth
 gheight = mult*gheight
@@ -110,7 +110,7 @@ marked_points = createNoise(numPoints//20, noise, gwidth + 2*noise, gheight + 2*
 
 print("Noise added")
 
-file = open("dataset1000000.txt", "w")
+file = open("dataset1000000new.txt", "w")
 
 for ele in marked_points:
 	i = ele[0]

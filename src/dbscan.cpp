@@ -63,18 +63,23 @@ int main(int argc, char **argv){
 			continue;
 		const vector<int> radIndices = kdtree.radiusSearch(points[i], eps, act_dim);
 		if(radIndices.size()<min_points){
-			label[i] = 0;
+			label[i] = -2;
 			continue;
 		}
 		cout << "#" << cluster_count <<"\n";
+		cout << i << "\n";
 		label[i] = cluster_count;
 		set <int> seed;
-		seed.insert(radIndices.begin(),radIndices.end());
-		seed.erase(i);
+		vector<int> elem;
+		for(int j=0;j<radIndices.size();j++){
+			if(label[radIndices[j]]<0)
+				elem.push_back(radIndices[j]);
+		}
+		seed.insert(elem.begin(),elem.end());
 		while(seed.size()!=0){
 			int q = *seed.begin();
 			seed.erase(q);
-			if(label[q]==0){
+			if(label[q]==-2){
 				cout << q <<"\n";
 				label[q] = cluster_count;
 				continue;
@@ -85,21 +90,26 @@ int main(int argc, char **argv){
 			label[q] = cluster_count;
 			const vector<int> radIndices2 = kdtree.radiusSearch(points[q], eps, act_dim);
 			if(radIndices2.size() >= min_points){
-				seed.insert(radIndices2.begin(),radIndices2.end());
+				vector <int> elem2;
+				for(int j=0;j<radIndices2.size();j++){
+					if(label[radIndices2[j]]<0)
+						elem2.push_back(radIndices2[j]);
+				}
+				seed.insert(elem2.begin(),elem2.end());
 			}
 		}
 		cluster_count +=1;
 	}
 	int outlier = 0;
 	for(int i=0;i<n;i++){
-		if(label[i]==0)
+		if(label[i]==-2)
 			outlier++;
 	}
 	if(outlier==0)
 		return 0;
 	cout << "#outlier\n";
 	for(int i=0;i<n;i++){
-		if(label[i]==0)
+		if(label[i]==-2)
 			cout << i <<"\n";
 	}
 	return 0;

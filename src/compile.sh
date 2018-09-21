@@ -1,5 +1,5 @@
 #!/bin/bash
 
-g++ -std=c++11 kmeans.cpp -o kmeans
-g++ -std=c++11 dbscan.cpp -o dbscan
-g++ -std=c++11 optics.cpp -o optics
+g++ -O3 -std=c++11 kmeans.cpp -o kmeans
+g++ -O3 -std=c++11 dbscan_2.cpp -o dbscan
+g++ -O3 -std=c++11 optics_2.cpp -o optics

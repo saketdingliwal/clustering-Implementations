@@ -1,53 +1,77 @@
 #include <bits/stdc++.h>
-#include "kdtree.h"
 #define pdi pair<double,int>
+#include "RTree.h"
+
 
 using namespace std;
-using namespace kdt;
+
+typedef RTree<int, double, 5, double> MyTree;
 
 
-class Point : public std::array<double, 5>
-{
-public:
-	static const int DIM = 5;
-	Point () {}
-	Point(double x, double y, double z, double a, double b)
-	{ 
-		(*this)[0] = x;
-		(*this)[1] = y;
-		(*this)[2] = z;
-		(*this)[3] = a;
-		(*this)[4] = b;
-	}
-};
-
-vector<Point> points;
+vector<vector<double> > points;
+vector <int> radIndices;
 int act_dim;
 int n;
 double eps;
 int min_points;
 vector<int> processed;
 vector<double> reachability;
-double distance(const Point& p, const Point& q){
+MyTree tree;
+int true_dim;
+
+double distance(int i, int j){
 	double dist = 0;
-	for (size_t i = 0; i <act_dim; i++)
-		dist += (p[i] - q[i]) * (p[i] - q[i]);
+	for (size_t ii = 0; ii <true_dim; ii++)
+		dist += ((points[i][ii] - points[j][ii]) * (points[i][ii] - points[j][ii]));
 	return sqrt(dist);
 }
+
+bool MySearchCallback(int id)
+{
+	radIndices.push_back(id);
+  	return true; // keep going
+}
+bool valid_dist(int i,int j){
+	return (distance(i,j)<=eps);
+}
+void populate_rand(int i){
+	radIndices.clear();
+	double search_min[act_dim];
+	double search_max[act_dim];
+	for(int j=0;j<true_dim;j++){
+		search_min[j] = points[i][j] - eps;
+		search_max[j] = points[i][j] + eps;
+	}
+	for(int j=true_dim;j<act_dim;j++){
+		search_min[j] = 0;
+		search_max[j] = 0;
+	}
+	tree.Search(search_min, search_max, MySearchCallback);
+	vector<int> circle_rand;
+	for(int j=0;j<radIndices.size();j++){
+		if(valid_dist(i,radIndices[j]))
+			circle_rand.push_back(radIndices[j]);
+	}
+	radIndices = circle_rand;
+}
+
+
+
 double core_dis_fn(int ind, vector<int> &rnn){
 	vector <double> dist;
 	for(int i=0;i<rnn.size();i++){
-		dist.push_back(distance(points[ind],points[rnn[i]]));
+		dist.push_back(distance(ind,rnn[i]));
 	}
 	nth_element(dist.begin(),dist.begin()+min_points-1,dist.end());
 	return dist[min_points-1];
 }
+
 void update(vector<int> &rnn, int ind, set<pdi> &seeds){
 	double core_dis = core_dis_fn(ind, rnn);
 	for(int i=0;i<rnn.size();i++){
 		int o = rnn[i];
 		if(processed[o]==0){
-			double new_reachability_dist = min(core_dis, distance(points[i],points[o]));
+			double new_reachability_dist = max(core_dis, distance(ind,o));
 			if(reachability[o]==DBL_MAX){
 				reachability[o] = new_reachability_dist;
 				seeds.insert(make_pair(new_reachability_dist, o));
@@ -72,7 +96,6 @@ int main(int argc, char **argv){
 	eps = stof(argv[2]);
   	string file_name = argv[3];
   	ifstream f(file_name);
-	int act_dim;
   	int n = 0;
   	string line;
   	while(getline(f, line)) {
@@ -85,15 +108,12 @@ int main(int argc, char **argv){
       		if(!stream)
         		break;
     	}
+    	true_dim = pt.size();
+    	for(int i=true_dim;i<5;i++){
+    		pt.push_back(0);
+    	}
     	act_dim = pt.size();
-    	Point p;
-    	for(int i=0;i<5;i++){
-    		p[i] = 0.0;
-    	}
-    	for(int i=0;i<act_dim;i++){
-    		p[i] = pt[i];
-    	}
-    	points.push_back(p);
+    	points.push_back(pt);
 	    n+=1;
   	}
 	processed.resize(n);
@@ -101,15 +121,19 @@ int main(int argc, char **argv){
 	for(int i=0;i<n;i++){
 		processed[i] = 0;
 		reachability[i] = DBL_MAX;
+		double point_arr[act_dim];
+  		for(int j=0;j<act_dim;j++){
+  			point_arr[j] = points[i][j];
+  		}
+  		tree.Insert(point_arr,point_arr,i);
 	}
-	KDTree<Point> kdtree(points,act_dim);
 	vector <int> order;
 	for(int i=0;i<n;i++){
 		if(processed[i]==1)
 			continue;
 		processed[i]=1;
 		order.push_back(i);
-		vector<int> radIndices = kdtree.radiusSearch(points[i], eps, act_dim);
+		populate_rand(i);
 		if(radIndices.size()>=min_points){
 			set<pdi> seeds;
 			update(radIndices, i, seeds);
@@ -119,9 +143,9 @@ int main(int argc, char **argv){
 				int q = itr->second;
 				processed[q] = 1;
 				order.push_back(q);
-				vector<int> radIndices2 = kdtree.radiusSearch(points[q], eps, act_dim);
-				if(radIndices2.size()>=min_points){
-					update(radIndices2, q, seeds);
+				populate_rand(q);
+				if(radIndices.size()>=min_points){
+					update(radIndices, q, seeds);
 				}
 			}
 		}
