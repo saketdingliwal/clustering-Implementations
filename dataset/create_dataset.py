@@ -91,10 +91,10 @@ gheight = 11000
 gap = 1000
 thicks = 300
 thickl = 3000
-numPoints = 25000
+numPoints = 500
 noise = 1000
 
-mult = 10
+mult = 1
 
 gwidth = mult*gwidth
 gheight = mult*gheight
@@ -121,13 +121,13 @@ marked_points = createNoise(numPoints//20, noise, gwidth + 2*noise, gheight + 2*
 
 print("Noise added")
 
-marked_points = createSquare(numPoints, thickl, thickl, 2*gwidth+thickl//2, thickl//2, marked_points)
-marked_points = createSquare(numPoints//20, 2*thickl, 2*thickl, 2*gwidth, 0, marked_points)
-marked_points = createSquare(numPoints//5, thickl, thickl, 4*gwidth + thickl//2, thickl//2, marked_points)
-marked_points = createSquare(numPoints//20, 2*thickl, 2*thickl, 4*gwidth, 0, marked_points)
+marked_points = createSquare(numPoints, thickl, thickl, gwidth + gwidth//2 +thickl//2, thickl//2, marked_points)
+marked_points = createSquare(numPoints//20, 2*thickl, 2*thickl, gwidth + gwidth//2, 0, marked_points)
+marked_points = createSquare(numPoints//4, thickl, thickl, gwidth + gwidth//2 + thickl//2, gheight//2 + thickl + thickl//2, marked_points)
+marked_points = createSquare(numPoints//20, 2*thickl, 2*thickl, gwidth + gwidth//2, gheight//2 + thickl, marked_points)
 
 
-file = open("dataset100000new.txt", "w")
+file = open("dataset1000new.txt", "w")
 
 for ele in marked_points:
 	i = ele[0]

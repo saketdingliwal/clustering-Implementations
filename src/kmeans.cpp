@@ -94,10 +94,14 @@ int main (int argc,char *argv[]) {
   }
   int dim = points[0].size();
   int num_cl = stoi(argv[1]);
+  vector <int> samplingIndex;
+  for (int i = 0; i < num_pts; i++) { samplingIndex.push_back(i); } 
+   srand(50); 
+   random_shuffle(samplingIndex.begin(), samplingIndex.end());
   for(int i=0;i<num_cl;i++)
   {
     if(i<num_pts)
-      centers.push_back(points[i]);
+      centers.push_back(points[samplingIndex[i]]);
     else{
       vector<double> p;
       p.resize(dim);

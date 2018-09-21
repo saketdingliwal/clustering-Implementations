@@ -5,10 +5,10 @@ import random
 inpfile = sys.argv[1]
 fname = sys.argv[2]
 
-print "aa gya"
+# print "aa gya"
 with open(inpfile) as f:
 	inpdata = f.readlines()
-inpdata = [[int(f) for f in x.strip().split(" ")] for x in inpdata]
+inpdata = [[float(f) for f in x.strip().split(" ")] for x in inpdata]
 
 
 with open(fname) as f:
@@ -32,10 +32,10 @@ for ele in content:
 			color_ind = color_ind%6
 	else:
 		coord = [int(f) for f in ele.split(" ")]
-		if color_ind==96:
+		if color_ind==6:
 			plt.plot(inpdata[coord[0]][0], inpdata[coord[0]][1], 'ro', color=color_arr[color_ind])
-		elif random.uniform(0,1)<0.001:
+		elif random.uniform(0,1)<1:
 			plt.plot(inpdata[coord[0]][0], inpdata[coord[0]][1], 'ro', color=color_arr[color_ind])
 
-print num_clusters-1
+print(num_clusters-1)
 plt.show()
