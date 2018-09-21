@@ -2,6 +2,22 @@ from random import randint
 import matplotlib.pyplot as plt
 import numpy as np
 
+file = open("dataset4d1000000.txt", "w")
+
+for i in range(0, 1000000):
+	for j in range(0, 4):
+		c = randint(0, 10000)
+		file.write(str(c) + " ")
+	file.write("\n")
+
+for i in range(0, 1000000):
+	for j in range(0, 4):
+		c = randint(0, 10000)
+		file.write(str(c+100000) + " ")
+	file.write("\n")
+
+exit()
+
 def getCoord(xs, ys, ind, tw):
 	xc = xs + ind%tw
 	yc = ys + ind//tw
