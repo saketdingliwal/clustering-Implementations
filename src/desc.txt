@@ -1,0 +1,9 @@
+Rtree.h borrowed from https://github.com/nushoin/RTree
+
+On dataset small.txt kmeans => can't distinguish between M and U shaped clusters. Include Noise. For k =4
+
+On dataset small.txt dbscan => for small epsilon = 650, min Points = 6, loosely packed clusters get broken into sub clusters but there is no noise in tightly packed cluster
+for big epsilon = 800, min Points = 6, loosely packed clusters are correct but there is noise in tightly packed cluster
+for very big epsilon = 1200 , min points = 6, M and U clusters get merged and noise included in clusters
+
+On dataset small.txt optics => and for epsilon =  650, 800, 1200 the optics works fine with 4 identifiable clusters, noises separated and no need for fine tuning of epsilon as large value can always be put. 
