@@ -88,6 +88,7 @@ int main (int argc,char *argv[]) {
       if(!stream)
         break;
     }
+    pt.pop_back();
     points.push_back(pt);
     clusters.push_back(0);
     num_pts+=1;

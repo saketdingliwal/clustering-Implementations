@@ -21,7 +21,8 @@ bool MySearchCallback(int id)
 bool valid_dist(int i,int j){
 	double dist =0.0;
 	for(int ii=0;ii<true_dim;ii++){
-		dist += ((points[i][ii]-points[j][ii])*(points[i][ii]-points[j][ii]));
+		double diff = (points[i][ii]-points[j][ii])*(points[i][ii]-points[j][ii]);
+		dist += (diff);
 	}
 	return (dist<=(eps*eps));
 }
@@ -41,8 +42,9 @@ void populate_rand(int i,int act_dim){
 	tree.Search(search_min, search_max, MySearchCallback);
 	vector<int> circle_rand;
 	for(int j=0;j<radIndices.size();j++){
-		if(valid_dist(i,radIndices[j]))
+		if(valid_dist(i,radIndices[j])){
 			circle_rand.push_back(radIndices[j]);
+		}
 	}
 	radIndices = circle_rand;
 }
@@ -52,7 +54,7 @@ int main(int argc, char **argv){
 	ios_base::sync_with_stdio(false); 
     cin.tie(NULL);   
 	int min_points = stoi(argv[1]);
-	eps = stof(argv[2]);
+	eps = stod(argv[2]);
   	string file_name = argv[3];
   	ifstream f(file_name);
 	int act_dim;
@@ -68,6 +70,7 @@ int main(int argc, char **argv){
       		if(!stream)
         		break;
     	}
+    	pt.pop_back();
     	true_dim = pt.size();
     	for(int i=true_dim;i<5;i++){
     		pt.push_back(0);
@@ -83,7 +86,7 @@ int main(int argc, char **argv){
   			point_arr[j] = points[i][j];
   		}
   		tree.Insert(point_arr,point_arr,i);
-  	}  	
+  	} 	
 	int cluster_count =0;
 	for(int i=0;i<n;i++){
 		if(label[i]!=-1)

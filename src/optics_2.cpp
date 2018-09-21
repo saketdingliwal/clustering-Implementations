@@ -93,7 +93,7 @@ int main(int argc, char **argv){
 	ios_base::sync_with_stdio(false); 
     cin.tie(NULL);   
 	min_points = stoi(argv[1]);
-	eps = stof(argv[2]);
+	eps = stod(argv[2]);
   	string file_name = argv[3];
   	ifstream f(file_name);
   	int n = 0;
@@ -108,6 +108,7 @@ int main(int argc, char **argv){
       		if(!stream)
         		break;
     	}
+    	pt.pop_back();
     	true_dim = pt.size();
     	for(int i=true_dim;i<5;i++){
     		pt.push_back(0);
