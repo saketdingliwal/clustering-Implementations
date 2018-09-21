@@ -1,22 +1,23 @@
 from random import randint
+from random import uniform
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = open("dataset4d1000000.txt", "w")
+# file = open("dataset4d1000000.txt", "w")
 
-for i in range(0, 1000000):
-	for j in range(0, 4):
-		c = randint(0, 10000)
-		file.write(str(c) + " ")
-	file.write("\n")
+# for i in range(0, 1000000):
+# 	for j in range(0, 4):
+# 		c = randint(0, 10000)
+# 		file.write(str(c) + " ")
+# 	file.write("\n")
 
-for i in range(0, 1000000):
-	for j in range(0, 4):
-		c = randint(0, 10000)
-		file.write(str(c+100000) + " ")
-	file.write("\n")
+# for i in range(0, 1000000):
+# 	for j in range(0, 4):
+# 		c = randint(0, 10000)
+# 		file.write(str(c+100000) + " ")
+# 	file.write("\n")
 
-exit()
+# exit()
 
 def getCoord(xs, ys, ind, tw):
 	xc = xs + ind%tw
@@ -36,7 +37,7 @@ def createM(numPoints, thickness, width, height, xs, ys, marked_points):
 		else:
 			ci = ci - hatArea
 			xy = getCoord((ci//legArea)*(width//2 - thickness//2), thickness, ci%legArea, thickness)
-		marked_points.append((xy[0] + xs, height - xy[1] + ys, 1))
+		marked_points.append((xy[0] + xs + uniform(0, 1), height - xy[1] + ys + uniform(0, 1)))
 
 	return marked_points
 
@@ -52,7 +53,7 @@ def createU(numPoints, thickness, width, height, xs, ys, marked_points):
 		else:
 			ci = ci - hatArea
 			xy = getCoord((ci//legArea)*(width - thickness), thickness, ci%legArea, thickness)
-		marked_points.append((xy[0] + xs, xy[1] + ys, 2))
+		marked_points.append((xy[0] + xs + uniform(0, 1), xy[1] + ys + uniform(0, 1)))
 
 	return marked_points
 
@@ -71,7 +72,17 @@ def createNoise(numPoints, noise, width, height, xs, ys, marked_points):
 			xy = getCoord(0, noise, ci - 2*widthPatch, noise)
 		else:
 			xy = getCoord(width-noise, noise, ci - 2*widthPatch - heightPatch, noise)
-		marked_points.append((xy[0] + xs, xy[1] + ys, 3))
+		marked_points.append((xy[0] + xs + uniform(0, 1), xy[1] + ys + uniform(0, 1)))
+
+	return marked_points
+
+def createSquare(numPoints, width, height, xs, ys, marked_points):
+	ttlArea = width*height
+
+	for i in range(0, numPoints):
+		ci = randint(0, ttlArea-1)
+		xy = getCoord(0, 0, ci, width)
+		marked_points.append((xy[0] + xs + uniform(0, 1), xy[1] + ys + uniform(0, 1)))
 
 	return marked_points
 
@@ -80,7 +91,7 @@ gheight = 11000
 gap = 1000
 thicks = 300
 thickl = 3000
-numPoints = 500000
+numPoints = 25000
 noise = 1000
 
 mult = 10
@@ -110,21 +121,19 @@ marked_points = createNoise(numPoints//20, noise, gwidth + 2*noise, gheight + 2*
 
 print("Noise added")
 
-file = open("dataset1000000new.txt", "w")
+marked_points = createSquare(numPoints, thickl, thickl, 2*gwidth+thickl//2, thickl//2, marked_points)
+marked_points = createSquare(numPoints//20, 2*thickl, 2*thickl, 2*gwidth, 0, marked_points)
+marked_points = createSquare(numPoints//5, thickl, thickl, 4*gwidth + thickl//2, thickl//2, marked_points)
+marked_points = createSquare(numPoints//20, 2*thickl, 2*thickl, 4*gwidth, 0, marked_points)
+
+
+file = open("dataset100000new.txt", "w")
 
 for ele in marked_points:
 	i = ele[0]
 	j = ele[1]
 
 	file.write(str(i) + " " + str(j) + "\n")
-	continue
-
-	fd = ele[2]
-	if(fd==1):
-		plt.plot(i, j, 'ro', color='red')
-	elif(fd==2):
-		plt.plot(i, j, 'ro', color='red')
-	elif(fd==3):
-		plt.plot(i, j, 'ro', color='red')
+	# plt.plot(i, j, 'ro', color='red')
 
 # plt.show()
